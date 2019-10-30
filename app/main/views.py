@@ -6,7 +6,7 @@ from flask_login import login_required
 from flask import render_template, abort,request,redirect,url_for
 from flask_login import login_user,login_required,logout_user
 from .forms import UpdateProfile
-from app.models import User
+from app.models import User,Comment,Case
 from .. import db,photos
 
 
@@ -56,3 +56,9 @@ def update_pic(uname):
         user.profile_pic_path = path
         db.session.commit()
     return redirect(url_for('main.profile',uname=uname))
+
+@main.route('/case/<id>')
+def case(id):
+    comment =Comment.query.filter_by(case_id=id).all()
+    case = Case.query.get(id)
+    return render_template('case.html',case=case,comment=comment)
